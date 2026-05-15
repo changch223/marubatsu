@@ -2,79 +2,82 @@
 //  ContentView.swift
 //  marubatsu
 //
-//  Created by chang chiawei on 2026/05/15.
+//  対戦画面: 連勝表示 ＋ 3×3 盤面 ＋ 連勝終了オーバーレイ。
 //
 
 import SwiftUI
-import SwiftData
 
 struct ContentView: View {
-    @Environment(\.modelContext) private var modelContext
-    @Query private var items: [Item]
+    @State private var model = GameViewModel()
 
     var body: some View {
-        NavigationViewWrapper {
-            List {
-                ForEach(items) { item in
-                    NavigationLink {
-                        Text("Item at \(item.timestamp, format: Date.FormatStyle(date: .numeric, time: .standard))")
-                    } label: {
-                        Text(item.timestamp, format: Date.FormatStyle(date: .numeric, time: .standard))
-                    }
-                }
-                .onDelete(perform: deleteItems)
+        ZStack {
+            VStack(spacing: 24) {
+                header
+                BoardView(
+                    cells: model.cells,
+                    isEnabled: model.isInputEnabled,
+                    onTap: { model.tap($0) }
+                )
+                legend
+                Text("あなたは ○、AI は ✕。全9マスに1回ずつ置くと1ラウンド終了。")
+                    .font(.footnote)
+                    .foregroundStyle(.secondary)
+                    .multilineTextAlignment(.center)
             }
-#if os(macOS)
-            .navigationSplitViewColumnWidth(min: 180, ideal: 200)
-#endif
-            .toolbar {
-#if os(iOS)
-                ToolbarItem(placement: .navigationBarTrailing) {
-                    EditButton()
-                }
-#endif
-                ToolbarItem {
-                    Button(action: addItem) {
-                        Label("Add Item", systemImage: "plus")
-                    }
-                }
-            }
-        }
-    }
+            .padding()
+            .blur(radius: model.streakEnded ? 6 : 0)
+            .disabled(model.streakEnded)
 
-    private func addItem() {
-        withAnimation {
-            let newItem = Item(timestamp: Date())
-            modelContext.insert(newItem)
-        }
-    }
-
-    private func deleteItems(offsets: IndexSet) {
-        withAnimation {
-            for index in offsets {
-                modelContext.delete(items[index])
+            if model.streakEnded, let outcome = model.lastOutcome {
+                ResultOverlayView(
+                    outcome: outcome,
+                    finalStreak: model.finalStreak,
+                    bestStreak: model.bestStreak,
+                    isNewBest: model.isNewBest,
+                    onRetry: { model.retry() }
+                )
+                .transition(.scale.combined(with: .opacity))
             }
         }
+        .animation(.easeInOut(duration: 0.25), value: model.streakEnded)
     }
-}
 
-fileprivate struct NavigationViewWrapper<Content: View>: View {
-    let content: () -> Content
-
-    var body: some View {
-#if os(macOS)
-        NavigationSplitView {
-            content()
-        } detail: {
-            Text("Select an item")
+    private var legend: some View {
+        HStack(spacing: 16) {
+            Label("あなたが配置", systemImage: "person.fill")
+                .foregroundStyle(Color.accentColor)
+            Label("AIが配置", systemImage: "cpu")
+                .foregroundStyle(Color.orange)
+            Label("太枠＝直近の手", systemImage: "square.dashed.inset.filled")
+                .foregroundStyle(.secondary)
         }
-#else
-        content()
-#endif
+        .font(.caption2)
+        .lineLimit(1)
+        .minimumScaleFactor(0.7)
+        .accessibilityElement(children: .combine)
+        .accessibilityLabel("凡例: 青と人アイコンはあなたが置いたマス、橙とCPUアイコンはAIが置いたマス、太枠は直近の手")
+    }
+
+    private var header: some View {
+        VStack(spacing: 4) {
+            Text("マルバツ 重ねがけ連勝")
+                .font(.title.bold())
+            HStack(spacing: 24) {
+                Label("\(model.currentStreak)", systemImage: "flame.fill")
+                    .accessibilityLabel("現在の連勝 \(model.currentStreak)")
+                Label("\(model.bestStreak)", systemImage: "trophy.fill")
+                    .accessibilityLabel("自己ベスト \(model.bestStreak)")
+            }
+            .font(.title3.bold())
+            Text(model.firstPlayerIsUser ? "このラウンドの先手: あなた" : "このラウンドの先手: AI")
+                .font(.caption)
+                .foregroundStyle(.secondary)
+        }
+        .accessibilityElement(children: .combine)
     }
 }
 
 #Preview {
     ContentView()
-        .modelContainer(for: Item.self, inMemory: true)
 }
