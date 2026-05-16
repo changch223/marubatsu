@@ -7,7 +7,7 @@
 
 import Foundation
 
-enum Mark: Equatable {
+enum Mark: Equatable, Sendable {
     case empty
     case o   // ユーザー
     case x   // AI
