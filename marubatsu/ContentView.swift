@@ -104,9 +104,12 @@ struct ContentView: View {
 
     private var header: some View {
         VStack(spacing: 12) {
-            Text("重ねマルバツ 連勝チャレンジ")
-                .font(.system(.title, design: .rounded).weight(.bold))
+            Text("MAX HARD マルバツ")
+                .font(.system(.title, design: .rounded).weight(.heavy))
                 .multilineTextAlignment(.center)
+            Text("連勝で巨大化する最高難度の重ねマルバツ")
+                .font(.caption)
+                .foregroundStyle(.secondary)
 
             HStack(spacing: 12) {
                 statCard(title: "盤面", value: model.boardSize,
