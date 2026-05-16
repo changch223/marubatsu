@@ -104,8 +104,9 @@ struct ContentView: View {
 
     private var header: some View {
         VStack(spacing: 12) {
-            Text("マルバツ 重ねがけ連勝")
+            Text("重ねマルバツ 連勝チャレンジ")
                 .font(.system(.title, design: .rounded).weight(.bold))
+                .multilineTextAlignment(.center)
 
             HStack(spacing: 12) {
                 statCard(title: "盤面", value: model.boardSize,
@@ -176,17 +177,21 @@ struct ContentView: View {
                 .foregroundStyle(.orange)
             Label("直近の手", systemImage: "scope")
                 .foregroundStyle(.secondary)
+            Label("置けない", systemImage: "lock.fill")
+                .foregroundStyle(.secondary)
         }
         .font(.caption2)
         .lineLimit(1)
         .minimumScaleFactor(0.7)
         .accessibilityElement(children: .combine)
-        .accessibilityLabel("凡例: 青と人アイコンはあなたの手、橙とCPUアイコンはAIの手、太枠は直近の手")
+        .accessibilityLabel("凡例: 青と人アイコンはあなたの手、橙とCPUアイコンはAIの手、太枠は直近の手、鍵は今は置けないマス")
     }
 
     private var rulesText: some View {
-        Text("4×4。○=あなた / ✕=AI。4連ライン（タテ/ヨコ/ナナメ）を同時2本そろえたら勝ち。"
-             + "重ねると記号が変化し、相手が直前に置いたマスには置けません。")
+        Text("○=あなた / ✕=AI で交互に着手。空マスは自分の印、相手の印に重ねると奪える、"
+             + "自分の印に重ねると相手の印に変わる。タテ/ヨコ/ナナメに N連ラインを"
+             + "同時2本そろえたら勝ち。相手の直前マス・その手番で既に置いたマスには"
+             + "置けない。2連勝ごとに盤が拡大（4→…→10）、10×10で2連勝＝完全勝利。")
             .font(.footnote)
             .foregroundStyle(.secondary)
             .multilineTextAlignment(.center)
