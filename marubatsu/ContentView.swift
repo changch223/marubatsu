@@ -155,7 +155,7 @@ struct ContentView: View {
 
     @ViewBuilder private var compensationBanner: some View {
         if model.userHasDoubleTurn {
-            Label("均衡補正: このターンはあと \(model.userMovesRemaining) 手 置けます",
+            Label("均衡補正: ○が✕より1多くなるまで連続で置けます",
                   systemImage: "bolt.fill")
                 .font(.subheadline.weight(.semibold))
                 .foregroundStyle(Color.accentColor)
