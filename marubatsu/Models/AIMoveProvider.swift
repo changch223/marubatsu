@@ -24,9 +24,16 @@ struct HeuristicAIProvider: AIMoveProviding {
     }
 }
 
-/// 既定は本ゲーム専用の強力アルゴリズム AI（決定的・最強）。
-/// FoundationModels は任意で別途差し替え可能だが、既定では使用しない
-/// （現ルールでは専用探索 AI の方が確実に強いため）。
+/// 対応端末では Apple Intelligence のオンデバイス基盤モデル（FoundationModels）を
+/// 対戦 AI として使用。非対応端末・不可用・出力不正時は本ゲーム専用の決定的
+/// 強力アルゴリズム（α-β）へ自動フォールバック。
 func makeAIProvider() -> any AIMoveProviding {
-    HeuristicAIProvider()
+    #if canImport(FoundationModels)
+    if #available(iOS 26.0, macOS 26.0, *) {
+        if FoundationModelsAIProvider.isAvailable {
+            return FoundationModelsAIProvider()
+        }
+    }
+    #endif
+    return HeuristicAIProvider()
 }

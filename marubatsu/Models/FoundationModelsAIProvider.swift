@@ -28,9 +28,14 @@ struct FoundationModelsAIProvider: AIMoveProviding {
     }
 
     func chooseMove(engine: GameEngine, level: Int) async -> Int {
-        let fallback = AIPlayer.chooseMove(engine: engine, level: level)
+        // フォールバックの探索はバックグラウンドで（メイン＝UI を止めない）。
+        func fallback() async -> Int {
+            await Task.detached(priority: .userInitiated) {
+                AIPlayer.chooseMove(engine: engine, level: level)
+            }.value
+        }
         guard case .available = SystemLanguageModel.default.availability else {
-            return fallback
+            return await fallback()
         }
         do {
             let session = LanguageModelSession(instructions: Self.instructions)
@@ -42,11 +47,11 @@ struct FoundationModelsAIProvider: AIMoveProviding {
             // 範囲外、または禁止マス（直前マス／この手番で既に置いた）はフォールバック。
             guard (0..<engine.cellCount).contains(cell),
                   !engine.forbiddenCells.contains(cell) else {
-                return fallback
+                return await fallback()
             }
             return cell
         } catch {
-            return fallback
+            return await fallback()
         }
     }
 
