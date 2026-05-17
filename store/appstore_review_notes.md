@@ -109,18 +109,18 @@ Apple Intelligence）を使用し処理は端末内で完結（通信なし）�
 
 ---
 
-## ⚠ 次回ビルドで対応推奨（今回の 2.1 返信自体には新ビルド不要）
+## ✅ 対応済: 未使用 Game Center 削除＋ビルド番号更新
 
-**Game Center エンタイトルメントが未使用のまま有効**になっています:
-`marubatsu/marubatsu.entitlements` に `com.apple.developer.game-center = true`
-が入っているが、コードに GameKit／リーダーボード等は一切なし。レビュアーが
-「Game Center 機能が見当たらない」と追加で指摘する典型パターン。
+- `marubatsu/marubatsu.entitlements` から `com.apple.developer.game-center` を
+  削除（空の dict に）。コードに GameKit 不使用を確認済み。pbxproj に capability
+  登録は無し（entitlements のみだった）。
+- ビルド番号を 1→2 に更新（`CURRENT_PROJECT_VERSION = 2`、`MARKETING_VERSION`
+  は 1.0 維持）= App Store Connect で一意な新ビルドとして必要。
+- クリーンビルド＋全25テスト緑（iOS 26.5 sim）。
 
-- **今回の 2.1（Information Needed）への返信は、Notes 記入＋画面収録の添付だけで
-  進められ、新しいビルドは不要。**まずはそれで返信する。
-- ただし**次に新ビルドを上げる際は、未使用の Game Center capability を削除**して
-  おくと再指摘を防げる（Xcode → Target → Signing & Capabilities で Game Center を
-  削除、または entitlements から該当キーを除去）。指示があればこちらで対応する。
+**次の手順（あなた）**: Xcode で Archive → Organizer から App Store Connect へ
+アップロード（ビルド2）→ そのビルドを審査に添付し、下記 Notes ＋実機画面収録を
+付けて 2.1 に返信する。
 
 その他、権限要求・purpose string は無し（`NS...UsageDescription` 不在を確認済み＝
 Notes の「権限なし」記述と一致）。

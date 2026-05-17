@@ -7,8 +7,9 @@
 - **App Store: v1.0 提出 → Guideline 2.1（Information Needed）で追加情報要求中
   （バグではない）。返信文＝`store/appstore_review_notes.md`。Notes 記入＋実機
   画面収録の添付で対応（新ビルド不要）。**
-- **要・次回ビルド対応**: 未使用の Game Center エンタイトルメントを削除
-  （`marubatsu/marubatsu.entitlements`）。
+- **対応済**: 未使用 Game Center エンタイトルメント削除。ビルド番号 1→2
+  （`CURRENT_PROJECT_VERSION = 2`、`MARKETING_VERSION = 1.0` 維持）。
+  → 新ビルド(2)を Archive→App Store Connect へアップロードして 2.1 に返信。
 - 作業ブランチ: `001-marubatsu-endless-rematch`（`main` 未マージ）。
 - リポジトリ: https://github.com/changch223/marubatsu
 - テスト: `xcodebuild test`（iOS 26.5 シミュレータ）**全25件 緑**。
