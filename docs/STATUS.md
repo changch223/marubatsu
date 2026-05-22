@@ -1,14 +1,12 @@
 # プロジェクト現況 / Resume Notes — Max Hard マルバツ
 
-最終更新: 2026-05-17
+最終更新: 2026-05-22
 
 ## ステータス
 
-- **App Store: ビルド2をアップロードし Guideline 2.1 に返信済み → レビュー結果待ち
-  （2026-05-17 時点）。** ビルド2は未使用 Game Center エンタイトルメント削除済み
-  （`CURRENT_PROJECT_VERSION = 2`、`MARKETING_VERSION = 1.0`）。Notes/返信文は
-  `store/appstore_review_notes.md`。
-- 次アクション: レビュー結果が来たら対応（承認→公開設定／リジェクト→指摘箇所修正）。
+- **App Store: v1.0（ビルド2）レビュー承認 ✅（2026-05-22）。** ストア配信中／公開準備完了
+  （リリース設定どおり）。Notes/返信文の履歴は `store/appstore_review_notes.md`。
+- 次アクション: 公開後の運用フェーズ（下記「次の運用候補」参照）。
 - 作業ブランチ: `001-marubatsu-endless-rematch`（`main` 未マージ）。
 - リポジトリ: https://github.com/changch223/marubatsu
 - テスト: `xcodebuild test`（iOS 26.5 シミュレータ）**全25件 緑**。
@@ -27,14 +25,15 @@
 - ドキュメント: `README.md`、`PRIVACY.md`（日英）、`store/appstore_ja.md`（ストア記入文一式）。
 - App Store 用スクリーンショット: `screen/1.png` `2.png` `3.png`。
 
-## 次に再開するときの候補タスク
+## 次の運用候補（任意）
 
-1. **実機（Apple Intelligence 有効）で LLM 対戦を実動作確認**（最重要・未検証）。
-2. 審査結果対応（リジェクト時の修正／メタデータ調整）。
-3. `main` へ PR 作成・マージ（マージ後 PRIVACY/Marketing URL を `main` パスへ差し替え）。
-4. 英語版ストア記入文（`store/appstore_en.md`）作成。
-5. プライバシーポリシーを GitHub Pages 等の素のページへ掲載し URL 差し替え。
-6. 任意: AI 難易度カーブ調整、UI 微調整、スクショ刷新。
+1. **`main` へ PR ＆マージ**（マージ後 PRIVACY/Marketing URL を `main` パスへ差し替えて
+   App Store Connect 側も更新するとブランチ削除リスクなし）。
+2. **タグを切る**: `v1.0`（または `v1.0-build2`）でリリース履歴を残す。
+3. **実機（Apple Intelligence 有効端末）で LLM 対戦の動作確認**（未検証）。
+4. **英語版ストア記入文** `store/appstore_en.md` を作成（海外配信を強化するなら）。
+5. プライバシーポリシーを GitHub Pages 等の素ページへ掲載し App Store URL を差し替え。
+6. 任意: AI 難易度カーブ調整、UI/スクショ刷新、次バージョン機能の検討。
 
 ## ビルド/テスト
 
